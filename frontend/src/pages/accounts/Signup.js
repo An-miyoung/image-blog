@@ -1,70 +1,101 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { Alert } from "antd";
 import { useHistory } from "react-router";
+import { Form, Input, Button, notification } from 'antd';
+import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 
 export default function Signup() {
     const history = useHistory();
-    const [inputs, setInputs] = useState({ username: "", password: ""});
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({});
-    const [formDisabled, setFormDisabled] = useState(true);
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        setLoading(true);
-        setErrors({});
-
-        Axios.post("http://localhost:8000/accounts/signup/", inputs)
-            .then(response => {
-                console.log("response: ", response);
-                history.push("/accounts/login");
-            })
-            .catch(error => {
-                if (error.response) {
-                    setErrors({
-                        username: (error.response.data.username || []).join(" "),
-                        password: (error.response.data.password || []).join(" "),
-                    });
-                }
-                console.log("error: ",  error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-        
+    const [fieldErrors, setFieldErrors] = useState({});
+     
+    // antd 에서는 한 row당 24column으로 본다
+    const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 8 },
+    };
+    const tailLayout = {
+        wrapperCol: { offset: 8, span: 16 },
     };
 
-    useEffect(() => {
-        const isEnabled = Object.values(inputs).every(s => s.length > 0);
-        setFormDisabled(!isEnabled);
-    },[inputs])
+    const onFinish = (values) => {
+        async function fn() {
+            const { username, password } = values;
+            setFieldErrors({});
 
-    const onChange = e => {
-        const { name, value } = e.target;
-        setInputs(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+            const data = { username, password };
+            try {
+                await Axios.post("http://localhost:8000/accounts/signup/", data);
+                
+                notification.open({
+                    message: "회원가입을 축하합니다.",
+                    description: "로그인페이지로 이동합니다.",
+                    icon: <SmileOutlined style={{color: "#108ee9"}}/>        
+                });
+                history.push("/accounts/login");
+            }
+            catch(error) {
+                if ( error.response ) {
+                    notification.open({
+                        message: "회원가입에 실패했습니다.",
+                        description: "사용자이름과 비밀번호를 확인해주세요",
+                        icon: <FrownOutlined style={{color:"#ff3330"}}/>        
+                    });
+                    const { data: fieldsErrorMessages } = error.response;
+                    setFieldErrors(
+                        Object.entries(fieldsErrorMessages).reduce((
+                            acc, [fieldName, errors]) => {
+                                acc[fieldName] = {
+                                    validateStatus: "error",
+                                    help: errors.join(" "),
+                                }
+                            return acc;
+                            }, {}
+                        )
+                    );
+                    
+                }
+            }
+        }
+        fn();
     };
 
     return (
-        <div> 
-            
-            <form onSubmit={onSubmit}>
-                <div>
-                    <input type="text" name="username" onChange={onChange}/>
-                    { errors.username && <Alert type="error" message={errors.username}/>}
-                </div>
-                <div>
-                    <input type="password" name="password" onChange={onChange}/>
-                    { errors.password && <Alert type="error" message={errors.password}/>}
-                </div>
-                <div>
-                    <input type="submit" value="회원가입" disabled={loading || formDisabled}/>
-                </div>
-            </form>
-        </div>
+        <Form
+            {...layout}
+            onFinish={onFinish}
+            // onFinishFailed={onFinishFailed}
+        >
+            <Form.Item
+                label="사용자이름"
+                name="username"
+                rules={[
+                    { required: true, message: '사용자이름을 입력해주세요!' },
+                    { min: 4, message: '4글자이상의 영문자를 입력해주세요.'}
+                ]}
+                hasFeedback
+                {...fieldErrors.username}
+            >
+                <Input />
+            </Form.Item>
+    
+            <Form.Item
+                label="비밀번호"
+                name="password"
+                rules={[
+                    { required: true, message: '비밀번호를 입력해주세요!' },
+                    { min: 5, message: '5글자이상의 영문자와 숫자 조합을 입력해주세요.'}
+                ]}
+                hasFeedback
+                {...fieldErrors.password}
+            >
+                <Input.Password />
+            </Form.Item>
+    
+            <Form.Item {...tailLayout}>
+                <Button type="primary" htmlType="submit">
+                    회원가입
+                </Button>
+            </Form.Item>
+        </Form>
     );
 }
