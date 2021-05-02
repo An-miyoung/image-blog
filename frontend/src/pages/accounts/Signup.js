@@ -7,15 +7,6 @@ import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 export default function Signup() {
     const history = useHistory();
     const [fieldErrors, setFieldErrors] = useState({});
-     
-    // antd 에서는 한 row당 24column으로 본다
-    const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 8 },
-    };
-    const tailLayout = {
-        wrapperCol: { offset: 8, span: 16 },
-    };
 
     const onFinish = (values) => {
         async function fn() {
@@ -99,3 +90,12 @@ export default function Signup() {
         </Form>
     );
 }
+
+// antd 에서는 한 row당 24column으로 본다
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 8 },
+};
+const tailLayout = {
+    wrapperCol: { offset: 8, span: 16 },
+};
