@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
-import useLocalStorage from "utils/useLocalStorage";
 import { useHistory } from "react-router";
 import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
+import { useAppContext, setToken } from "store";
 
 export default function Login() {
     const history = useHistory();
-    const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
-    const [fieldErrors, setFieldErrors] = useState({});
 
-    console.log("loaded jwtToken: ", jwtToken);
+    // useAppContext 를 사용해서 jwtToken 을 처리하기 위해 아래 로직은 생략
+    // const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
+    const { dispatch } = useAppContext();
+
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const onFinish = (values) => {
         async function fn() {
@@ -24,7 +26,9 @@ export default function Login() {
                 // const jwtToken = response.data.token 과 같은 의미를 아래처럼 쓴다.
                 const { data: { token: jwtToken } } = response;
                 
-                setJwtToken(jwtToken);
+                // useAppContext 를 사용해서 jwtToken 을 처리하기 위해 아래 로직은 생략
+                // setJwtToken(jwtToken);
+                dispatch(setToken(jwtToken));
 
                 notification.open({
                     message: "로그인했습니다.",
@@ -104,7 +108,7 @@ export default function Login() {
 // antd 에서는 한 row당 24column으로 본다
 const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
