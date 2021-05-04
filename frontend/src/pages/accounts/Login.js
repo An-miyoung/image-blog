@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
+import useLocalStorage from "utils/useLocalStorage";
 import { useHistory } from "react-router";
 import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 
 export default function Login() {
     const history = useHistory();
+    const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
     const [fieldErrors, setFieldErrors] = useState({});
+
+    console.log("loaded jwtToken: ", jwtToken);
 
     const onFinish = (values) => {
         async function fn() {
@@ -19,12 +23,13 @@ export default function Login() {
 
                 // const jwtToken = response.data.token 과 같은 의미를 아래처럼 쓴다.
                 const { data: { token: jwtToken } } = response;
-                console.log("jwtToken: ", jwtToken);
-                // notification.open({
-                //     message: "로그인했습니다.",
-                //     description: "로그인페이지로 이동합니다.",
-                //     icon: <SmileOutlined style={{color: "#108ee9"}}/>        
-                // });
+                
+                setJwtToken(jwtToken);
+
+                notification.open({
+                    message: "로그인했습니다.",
+                    icon: <SmileOutlined style={{color: "#108ee9"}}/>        
+                });
                 // history.push("/accounts/login");
             }
             catch(error) {
@@ -79,7 +84,6 @@ export default function Login() {
                     name="password"
                     rules={[
                         { required: true, message: '비밀번호를 입력해주세요!' },
-                        { min: 5, message: '5글자이상의 영문자와 숫자 조합을 입력해주세요.'}
                     ]}
                     hasFeedback
                     {...fieldErrors.password}
