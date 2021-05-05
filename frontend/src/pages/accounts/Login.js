@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 import { useAppContext, setToken } from "store";
@@ -11,8 +11,10 @@ export default function Login() {
     // useAppContext 를 사용해서 jwtToken 을 처리하기 위해 아래 로직은 생략
     // const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
     const { dispatch } = useAppContext();
-
+    const location = useLocation();
     const [fieldErrors, setFieldErrors] = useState({});
+
+    const { from: loginRedirectUrl } = location.state || { from : { pathname: "/" }};
 
     const onFinish = (values) => {
         async function fn() {
@@ -34,7 +36,7 @@ export default function Login() {
                     message: "로그인했습니다.",
                     icon: <SmileOutlined style={{color: "#108ee9"}}/>        
                 });
-                // history.push("/accounts/login");
+                history.push(loginRedirectUrl);
             }
             catch(error) {
                 if ( error.response ) {
