@@ -29,7 +29,7 @@ class User(AbstractUser):
 
     @property
     def name(self):
-        return f"{self.last_name} {self.first_name}"
+        return f"{self.last_name} {self.first_name}".strip()
 
     @property
     def avatar_url(self):

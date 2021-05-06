@@ -110,8 +110,8 @@ export default function Login() {
 // antd 에서는 한 row당 24column으로 본다
 const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    wrapperCol: { span: 8 },
 };
 const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+    wrapperCol: { offset: 8, span: 8 },
 };
