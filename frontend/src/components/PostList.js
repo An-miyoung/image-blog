@@ -22,7 +22,7 @@ function PostList() {
                 setPostList(data);
             })
             .catch(error => {
-                
+                console.error(error);
             })
     }, []);
     
