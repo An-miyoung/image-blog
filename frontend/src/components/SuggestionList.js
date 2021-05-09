@@ -1,19 +1,49 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Card } from "antd";
-import "./SuggestionList.scss";
 import Suggestion from "./Suggestion";
+import Axios from "axios";
 import useAxios from "axios-hooks";
 import { useAppContext } from "store";
+import "./SuggestionList.scss";
 
 export default function SuggestionList({ style }) {
     const { store: { jwtToken }} = useAppContext();
     const headers = { Authorization: `JWT ${jwtToken}`};
+    const [userList, setUserList] = useState([]);
 
-    const config  = "http://localhost:8000/accounts/suggestions/"
-    const [ { data: userList, loading, error }, refetch ] = useAxios({
+    // suggestionList 을 가져오기 위한 조회용으로 useAxios 사용하면 유용
+    const [ { data: originUserList, loading, error }, refetch ] = useAxios({
         url: "http://localhost:8000/accounts/suggestions/",
         headers,
     });
+
+    // 매 render 시 originUserList 를 도는 비효율을 없애기 위해
+    // useEffect 는 originUserList 의 값이 바뀔때만 수행
+    useEffect(() => {
+        if ( !originUserList ) 
+            setUserList([]);
+        else 
+            setUserList(originUserList.map(user => ({ ...user, is_follow: false })));
+    }, [originUserList]);
+
+    const onFollowUser = username => {
+        Axios.post(
+            "http://localhost:8000/accounts/follow/",
+            { username },
+            { headers }
+        )
+            .then(response => {
+                setUserList(prevUserList => 
+                    prevUserList.map(user => 
+                        (user.username !== username) ? user : {...user, is_follow: true}
+                    ) 
+                )
+            })
+            .catch(error => {
+                console.error(error)
+            }); 
+        console.log("username:", username);
+    };
     
     // useAxios 가 useState, useEffect, Axios 가 하는 일을 다 한다.
     // const [ userList, setUserList ] = useState([]);
@@ -42,7 +72,11 @@ export default function SuggestionList({ style }) {
             <Card title="Suggestions for you" size="small">
                 { userList &&
                   userList.map(suggestionUser => (
-                    <Suggestion key={suggestionUser.username} suggestionUser={suggestionUser} />)
+                    <Suggestion 
+                        key={suggestionUser.username} 
+                        suggestionUser={suggestionUser} 
+                        onFollowUser={onFollowUser}
+                    />)
                 )}
             </Card>
         </div>

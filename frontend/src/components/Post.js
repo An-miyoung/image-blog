@@ -4,7 +4,7 @@ import { HeartOutlined, UserOutlined } from "@ant-design/icons"
 
 function Post({post}) {
 
-    const { caption, location, photo } = post;
+    const { caption, location, photo, tag_set, like_user_set } = post;
 
     return (
         <div style={{marginBottom:'2rem'}}>
