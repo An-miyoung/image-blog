@@ -30,13 +30,3 @@ class SuggestionUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "name", "avatar_url"]
 
-
-class FollowUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "username",
-            "follower_set",
-            "following_set",
-        ]
-

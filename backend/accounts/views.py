@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from .serializers import (
     SignupSerializer,
     SuggestionUserSerializer,
-    FollowUserSerializer,
 )
 
 
@@ -41,11 +40,6 @@ def user_follow(request):
     request.user.following_set.add(follow_user)
     follow_user.follower_set.add(request.user)
     return Response(status.HTTP_204_NO_CONTENT)
-
-
-class FollowListAPIView(ListAPIView):
-    queryset = get_user_model().objects.all()
-    serializer_class = FollowUserSerializer
 
 
 @api_view(["POST"])

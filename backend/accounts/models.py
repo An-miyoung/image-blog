@@ -13,8 +13,12 @@ class User(AbstractUser):
     #     MALE = "M", "남성"
     #     UNISEX = "U", "알리지않음"
 
-    follower_set = models.ManyToManyField("self", blank=True)
-    following_set = models.ManyToManyField("self", blank=True)
+    follower_set = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name="my_following_set"
+    )
+    following_set = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name="my_follower_set"
+    )
 
     # first_name, last_name, email은 AbstractUser가 기본으로 제공한다. 선언한 필요없음
     website_url = models.URLField(blank=True)

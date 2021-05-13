@@ -4,6 +4,9 @@ import { useHistory, useLocation } from "react-router";
 import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
 import { useAppContext, setToken } from "store";
+import LogoImage from "assets/logo2.png";
+import { parseErrorMessages } from "utils/forms";
+
 
 export default function Login() {
     const history = useHistory();
@@ -46,17 +49,7 @@ export default function Login() {
                         icon: <FrownOutlined style={{color:"#ff3330"}}/>        
                     });
                     const { data: fieldsErrorMessages } = error.response;
-                    setFieldErrors(
-                        Object.entries(fieldsErrorMessages).reduce((
-                            acc, [fieldName, errors]) => {
-                                acc[fieldName] = {
-                                    validateStatus: "error",
-                                    help: errors.join(" "),
-                                }
-                            return acc;
-                            }, {}
-                        )
-                    );
+                    setFieldErrors(parseErrorMessages(fieldsErrorMessages));
                     
                 }
             }
@@ -65,45 +58,53 @@ export default function Login() {
     };
 
     return ( 
-        <Card title="로그인">     
-            <Form
-                {...layout}
-                onFinish={onFinish}
-                // onFinishFailed={onFinishFailed}
-            >
-                <Form.Item
-                    label="사용자이름"
-                    name="username"
-                    rules={[
-                        { required: true, message: '사용자이름을 입력해주세요!' },
-                        { min: 4, message: '4글자이상의 영문자를 입력해주세요.'}
-                    ]}
-                    hasFeedback
-                    {...fieldErrors.username}
-                    {...fieldErrors.non_field_errors}
+        <>
+            <div style={{marginTop: '20px', marginLeft: '20px'}}>
+                <h1 className="page-logo">
+                    <img src={LogoImage} alt="logo" style={{marginRight:'0.5em'}} />
+                    Pop-up Book
+                </h1>
+            </div>
+            <Card title="로그인">     
+                <Form
+                    {...layout}
+                    onFinish={onFinish}
+                    // onFinishFailed={onFinishFailed}
                 >
-                    <Input />
-                </Form.Item>
-        
-                <Form.Item
-                    label="비밀번호"
-                    name="password"
-                    rules={[
-                        { required: true, message: '비밀번호를 입력해주세요!' },
-                    ]}
-                    hasFeedback
-                    {...fieldErrors.password}
-                >
-                    <Input.Password />
-                </Form.Item>
-        
-                <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
-                        로그인
-                    </Button>
-                </Form.Item>
-            </Form>
-        </Card>  
+                    <Form.Item
+                        label="사용자이름"
+                        name="username"
+                        rules={[
+                            { required: true, message: '사용자이름을 입력해주세요!' },
+                            { min: 4, message: '4글자이상의 영문자를 입력해주세요.'}
+                        ]}
+                        hasFeedback
+                        {...fieldErrors.username}
+                        {...fieldErrors.non_field_errors}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="비밀번호"
+                        name="password"
+                        rules={[
+                            { required: true, message: '비밀번호를 입력해주세요!' },
+                        ]}
+                        hasFeedback
+                        {...fieldErrors.password}
+                    >
+                        <Input.Password />
+                    </Form.Item>
+
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            로그인
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card> 
+        </> 
     );
 }
 

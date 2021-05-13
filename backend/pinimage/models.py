@@ -19,8 +19,8 @@ class Post(TimestampedModel):
     caption = models.CharField(max_length=500)
     tag_set = models.ManyToManyField("Tag", blank=True)
     location = models.CharField(max_length=100)
-    like_user_set = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name="like_post_set", on_delete=models.CASCADE
+    like_user_set = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="like_post_set", blank=True,
     )
 
     def __str__(self):

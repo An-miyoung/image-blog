@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Axios from "axios";
 import { useHistory } from "react-router";
-import { Form, Input, Button, notification } from 'antd';
+import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
+import LogoImage from "assets/logo2.png";
 
 export default function Signup() {
     const history = useHistory();
@@ -51,43 +52,53 @@ export default function Signup() {
     };
 
     return (
-        <Form
-            {...layout}
-            onFinish={onFinish}
-            // onFinishFailed={onFinishFailed}
-        >
-            <Form.Item
-                label="사용자이름"
-                name="username"
-                rules={[
-                    { required: true, message: '사용자이름을 입력해주세요!' },
-                    { min: 4, message: '4글자이상의 영문자를 입력해주세요.'}
-                ]}
-                hasFeedback
-                {...fieldErrors.username}
-            >
-                <Input />
-            </Form.Item>
-    
-            <Form.Item
-                label="비밀번호"
-                name="password"
-                rules={[
-                    { required: true, message: '비밀번호를 입력해주세요!' },
-                    { min: 5, message: '5글자이상의 영문자와 숫자 조합을 입력해주세요.'}
-                ]}
-                hasFeedback
-                {...fieldErrors.password}
-            >
-                <Input.Password />
-            </Form.Item>
-    
-            <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    회원가입
-                </Button>
-            </Form.Item>
-        </Form>
+        <>
+            <div style={{marginTop: '20px', marginLeft: '20px'}}>
+                <h1 className="page-logo">
+                    <img src={LogoImage} alt="logo" style={{marginRight:'0.5em'}} />
+                    Pop-up Book
+                </h1>
+            </div>
+            <Card title="회원가입">
+                <Form
+                    {...layout}
+                    onFinish={onFinish}
+                    // onFinishFailed={onFinishFailed}
+                >
+                    <Form.Item
+                        label="사용자이름"
+                        name="username"
+                        rules={[
+                            { required: true, message: '사용자이름을 입력해주세요!' },
+                            { min: 4, message: '4글자이상의 영문자를 입력해주세요.'}
+                        ]}
+                        hasFeedback
+                        {...fieldErrors.username}
+                    >
+                        <Input />
+                    </Form.Item>
+            
+                    <Form.Item
+                        label="비밀번호"
+                        name="password"
+                        rules={[
+                            { required: true, message: '비밀번호를 입력해주세요!' },
+                            { min: 5, message: '5글자이상의 영문자와 숫자 조합을 입력해주세요.'}
+                        ]}
+                        hasFeedback
+                        {...fieldErrors.password}
+                    >
+                        <Input.Password />
+                    </Form.Item>
+            
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            회원가입
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+        </>
     );
 }
 
