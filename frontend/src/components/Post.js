@@ -1,12 +1,13 @@
 import React from "react";
+import Axios from "axios";
 import { Avatar, Card } from "antd";
 import { HeartOutlined, HeartTwoTone } from "@ant-design/icons"
+import CommentList from "./CommentList";
 
-function Post({ post, handleLike }) {
-
+function Post({ post, handleLike }) {    
     const { author, caption, location, photo, tag_set, is_like } = post;
     const { username, name, avatar_url } = author;
-
+   
     return (
         <div className="post" style={{marginBottom:'2rem'}}>
             <Card 
@@ -30,8 +31,10 @@ function Post({ post, handleLike }) {
                         {<Avatar size="large" 
                                 icon={<img src={'http://localhost:8000' + avatar_url} alt={username}/>} />} 
                     title={location} 
-                    description={caption} 
+                    description={caption}
+                    style={{marginBottom: "0.5em"}}
                 />
+                <CommentList post={post} />
             </Card>
         </div>
     );
