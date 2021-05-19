@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import get_user_model
 from django.db.models import fields
 from django.http import request
@@ -6,6 +7,18 @@ from .models import Post, Comment
 
 
 class AuthorSerializer(serializers.ModelSerializer):
+    # url 앞에 localhost 가 붙도록 url을 지정하기 위해
+    avatar_url = serializers.SerializerMethodField("avatar_url_field")
+
+    def avatar_url_field(self, author):
+        if re.match(r"^https?://", author.avatar_url):
+            return author.avartar_url
+
+        if "request" in self.context:
+            scheme = self.context["request"].scheme
+            host = self.context["request"].get_host()
+            return scheme + "://" + host + author.avatar_url
+
     class Meta:
         model = get_user_model()
         fields = ["username", "name", "avatar_url"]

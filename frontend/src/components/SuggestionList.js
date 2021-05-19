@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Card } from "antd";
 import Suggestion from "./Suggestion";
-import Axios from "axios";
-import useAxios from "axios-hooks";
+import { axiosInstance, useAxios } from "api";
 import { useAppContext } from "store";
 import "./SuggestionList.scss";
 
@@ -13,7 +12,7 @@ export default function SuggestionList({ style }) {
 
     // suggestionList 을 가져오기 위한 조회용으로 useAxios 사용하면 유용
     const [ { data: originUserList, loading, error }, refetch ] = useAxios({
-        url: "http://localhost:8000/accounts/suggestions/",
+        url: "/accounts/suggestions/",
         headers,
     });
 
@@ -27,11 +26,7 @@ export default function SuggestionList({ style }) {
     }, [originUserList]);
 
     const onFollowUser = username => {
-        Axios.post(
-            "http://localhost:8000/accounts/follow/",
-            { username },
-            { headers }
-        )
+        axiosInstance.post("/accounts/follow/", { username }, { headers })
             .then(response => {
                 setUserList(prevUserList => 
                     prevUserList.map(user => 

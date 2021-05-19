@@ -23,6 +23,11 @@ class SuggestionListAPIView(ListAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = SuggestionUserSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+
     def get_queryset(self):
         qs = (
             super()

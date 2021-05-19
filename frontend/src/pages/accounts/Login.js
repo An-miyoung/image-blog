@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Axios from "axios";
+import { axiosInstance } from "api";
 import { useHistory, useLocation } from "react-router";
 import { Card, Form, Input, Button, notification } from 'antd';
 import { SmileOutlined, FrownOutlined } from "@ant-design/icons";
@@ -26,7 +26,7 @@ export default function Login() {
 
             const data = { username, password };
             try {
-                const response = await Axios.post("http://localhost:8000/accounts/token/", data);
+                const response = await axiosInstance.post("/accounts/token/", data);
 
                 // const jwtToken = response.data.token 과 같은 의미를 아래처럼 쓴다.
                 const { data: { token: jwtToken } } = response;

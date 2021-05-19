@@ -11,10 +11,7 @@ export default function Comment({ comment }) {
         <AntdComment 
             author= { displayName }
             avatar={
-                <Avatar
-                    src={ "http://localhost:8000" + avatar_url }
-                    alt={ displayName }
-                />
+                <Avatar src={ avatar_url } alt={ displayName } />
                 }
             content={
             <p>

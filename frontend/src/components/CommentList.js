@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Axios from "axios";
-import { Button, Input } from "antd";
-import useAxios from "axios-hooks";
+import { axiosInstance, useAxios } from "api";
+import { Button, Input, Form } from "antd";
 import { useAppContext } from "store";
 import Comment from "./Comment";
 
@@ -13,15 +12,14 @@ export default function CommentList({post}) {
     const headers = { Authorization: `JWT ${jwtToken}`};
 
     const [ { data: commentList, loading, error }, refetch ] = useAxios({
-        url: `http://localhost:8000/api/posts/${post.id}/comments/`,
+        url: `/api/posts/${post.id}/comments/`,
         headers,
     });
 
     const handleCommentSave = async () => {
-        const apiUrl = `http://localhost:8000/api/posts/${post.id}/comments/`;
-        console.group("handleCommentSave");
+        const apiUrl = `/api/posts/${post.id}/comments/`;
         try {
-            const response = await Axios.post(apiUrl, { message: commentContent }, { headers });
+            const response = await axiosInstance.post(apiUrl, { message: commentContent }, { headers });
             setCommentContent("");
             refetch();
         }
@@ -30,25 +28,54 @@ export default function CommentList({post}) {
         }
     };
 
+    const onFinish = () => {
+
+    };
+
 
     return (
         <div>
             {commentList && commentList.map(comment => (
                 <Comment key={comment.id} comment={comment} />))
             }
-
-            <Input.TextArea 
-                style={{marginBottom: "0.5em"}}
-                value={commentContent}
-                onChange={e => setCommentContent(e.target.value)}
-            />
-            <Button 
+            <Form name="customized_form_controls"
+                  layout="inline"
+                  onFinish={onFinish}
+            >
+                <Form.Item style={{width: "80%"}}>
+                    <Input.TextArea 
+                        style={{marginBottom: "0.5em"}}
+                        value={commentContent}
+                        onChange={e => setCommentContent(e.target.value)}
+                    />
+                </Form.Item>
+                <Form.Item> 
+                    <Button 
+                    type={"primary"} 
+                    disabled={commentContent.length === 0}
+                    onClick={handleCommentSave}
+                    >
+                        댓글쓰기
+                    </Button>
+                </Form.Item>
+                
+            </Form>
+                {/* <Input.TextArea 
+                    style={{marginBottom: "0.5em"}}
+                    value={commentContent}
+                    onChange={e => setCommentContent(e.target.value)}
+                />
+                <Button 
                 block type={"primary"} 
                 disabled={commentContent.length === 0}
                 onClick={handleCommentSave}
-            >
-                댓글쓰기
-            </Button>
+                >
+                    댓글쓰기
+                </Button> */}
+            
+
+
+            
         </div>   
     );
 

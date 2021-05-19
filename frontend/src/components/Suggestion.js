@@ -9,7 +9,7 @@ export default function Suggestion({ suggestionUser, onFollowUser }) {
         <div className="suggestion">
             <div className="avatar">
                 <Avatar icon={ 
-                    <img src={"http://localhost:8000"+avatar_url} 
+                    <img src={ avatar_url } 
                          alt={`${username}'s avatar`}/> } 
                 />        
             </div>

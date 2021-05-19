@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Axios from "axios";
+import { axiosInstance } from "api";
 import { Form, Input, Button, notification, Modal, Upload } from 'antd';
 import { FrownOutlined, PlusOutlined } from "@ant-design/icons";
 import { getBase64FromFile} from "utils/base64";
@@ -32,8 +32,7 @@ export default function PostNewForm() {
 
         const headers = { Authorization: `JWT ${jwtToken}`};
         try {
-            const response = await Axios.post("http://localhost:8000/api/posts/", formData, { headers });
-            console.log("response: ", response);
+            const response = await axiosInstance.post("/api/posts/", formData, { headers });
             history.push("/");
         }
         catch(error) {
