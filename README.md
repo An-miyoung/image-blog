@@ -18,4 +18,4 @@
 - frontend : react
 
 ### Deploy
-- AWS azure SASS:현재는 서비스하고 있지 않음. 생각보다 엄청난 비용
+- Microsoft Azure SASS:현재는 서비스하고 있지 않음. 생각보다 엄청난 비용
